@@ -4,7 +4,6 @@ import net.typho.jpp.lexical.Lexer;
 import net.typho.jpp.lexical.StringLexer;
 import net.typho.jpp.parsing.DefaultParser;
 import net.typho.jpp.parsing.Parser;
-import net.typho.jpp.parsing.ParsingException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,14 +32,12 @@ public class JPP {
                     parser.parse(lexer);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
-                } catch (ParsingException e) {
-                    e.printStackTrace();
                 }
             }
         }
     }
 
     public static void main(String[] args) throws IOException {
-        parse(Path.of("src", "main", "java", "net", "typho", "jpp"));
+        parse(Path.of("src", "main", "java", "net", "typho", "jpp", "parsing", "MethodInfoParser.java"));
     }
 }

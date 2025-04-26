@@ -17,13 +17,13 @@ public class FieldParser implements Parser {
     public void take(String token, LexicalIterator it) {
         switch (token) {
             case "=": {
-                System.out.println("\tInitialized with " + it.concatUntil(";", ",") + "\n");
+                System.out.println("\tInitialized with " + it.concatUntil(";", ","));
                 parent.current = attrib.body;
                 attrib.body.modifiers.clear();
                 break;
             }
             case ";", ",": {
-                System.out.println("\tInitialized with null" + "\n");
+                System.out.println("\tInitialized with null");
                 parent.current = attrib.body;
                 attrib.body.modifiers.clear();
                 break;

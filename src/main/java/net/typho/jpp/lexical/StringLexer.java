@@ -11,59 +11,49 @@ public class StringLexer implements Lexer {
     public final Object src;
 
     public StringLexer(Path p) throws IOException {
-        this(p, Files.readString(p));
+        this(p, Files.readAllLines(p));
     }
 
-    public StringLexer(Object src, String s) {
+    public StringLexer(Object src, List<String> list) {
         this.src = src;
 
         StringBuilder[] b = {new StringBuilder()};
-        int[] pos = {1, 1, 0};
+        int[] pos = {1, 1};
 
         Runnable end = () -> {
-            String res = b[0].toString().replaceAll(" ", "");
+            String og = b[0].toString();
+            String res = og.replaceAll(" ", "");
 
             if (!res.isEmpty()) {
-                tokens.add(new Token(res, pos[0], pos[1], pos[2]));
+                int len = og.length();
+                tokens.add(new Token(res, pos[0], pos[1] - len, len));
                 b[0] = new StringBuilder();
-
-                if (!res.equals("\n")) {
-                    pos[1] += pos[2];
-                    pos[2] = 0;
-                }
             }
         };
 
-        s.chars().forEach(c -> {
-            switch (c) {
-                case '\r': {
-                    return;
-                }
-                case ' ': {
-                    end.run();
-                    return;
-                }
-                case '\'', '"', '[', ']', '{', '}', '\\', '|', '`', '~', '<', '>', '/', '?', '.', ',', '-', '=', '+', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', ';', ':', '\n': {
-                    end.run();
+        for (String s : list) {
+            s.chars().forEach(c -> {
+                pos[1]++;
 
-                    if (c == '\n') {
-                        pos[0]++;
-                        pos[1] = 0;
-                        pos[2] = 0;
+                switch (c) {
+                    case ' ': {
+                        end.run();
+                        return;
                     }
+                    case '\'', '"', '[', ']', '{', '}', '\\', '|', '`', '~', '<', '>', '/', '?', '.', ',', '-', '=', '+', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', ';', ':': {
+                        end.run();
 
-                    tokens.add(new Token(String.valueOf((char) c), pos[0], pos[1], pos[2]));
-
-                    if (c != '\n') {
-                        pos[1]++;
-                        pos[2] = 1;
+                        tokens.add(new Token(String.valueOf((char) c), pos[0], pos[1] - 1, 1));
+                        return;
                     }
-                    return;
                 }
-            }
 
-            b[0].append((char) c);
-        });
+                b[0].append((char) c);
+            });
+
+            pos[0]++;
+            pos[1] = 0;
+        }
 
         end.run();
     }

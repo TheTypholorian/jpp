@@ -13,9 +13,7 @@ public class MethodInfoParser implements Parser {
         this.name = name;
     }
 
-    protected void code(LexicalIterator it) {
-        String next = it.next();
-
+    protected void handle(String next, LexicalIterator it) {
         switch (next) {
             case "{": {
                 int brackets = 1, lines = 0;
@@ -46,10 +44,28 @@ public class MethodInfoParser implements Parser {
                 System.out.println("\tNo method body");
                 break;
             }
+            case "throws": {
+                while (true) {
+                    System.out.println("Throws " + it.next());
+
+                    next = it.next();
+
+                    if (!next.equals(",")) {
+                        handle(next, it);
+                        break;
+                    }
+                }
+
+                break;
+            }
             default: {
                 throw new ParsingException(it, "Unexpected token " + next);
             }
         }
+    }
+
+    protected void code(LexicalIterator it) {
+        handle(it.next(), it);
 
         parent.current = attrib.body;
         attrib.body.modifiers.clear();

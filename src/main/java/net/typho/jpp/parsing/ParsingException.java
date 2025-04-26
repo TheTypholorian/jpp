@@ -7,7 +7,7 @@ public class ParsingException extends RuntimeException {
     public final int x, y, width;
 
     public ParsingException(LexicalIterator it, String message) {
-        super(it.src() + " at row " + it.row() + ", column " + it.col() + ", and " + it.width() + " chars:\n" + message);
+        super(it.src() + " (iterator last returned " + it.last() + ") at row " + it.row() + ", column " + it.col() + ", and " + it.width() + " chars:\n" + message);
         this.src = it.src();
         this.x = it.col();
         this.y = it.row();
