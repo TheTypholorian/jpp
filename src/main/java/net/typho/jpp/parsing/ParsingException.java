@@ -1,22 +1,16 @@
 package net.typho.jpp.parsing;
 
+import net.typho.jpp.lexical.LexicalIterator;
+
 public class ParsingException extends RuntimeException {
-    public ParsingException() {
-    }
+    public final Object src;
+    public final int x, y, width;
 
-    public ParsingException(String message) {
-        super(message);
-    }
-
-    public ParsingException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ParsingException(Throwable cause) {
-        super(cause);
-    }
-
-    public ParsingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public ParsingException(LexicalIterator it, String message) {
+        super(it.src() + " at row " + it.row() + ", column " + it.col() + ", and " + it.width() + " chars:\n" + message);
+        this.src = it.src();
+        this.x = it.col();
+        this.y = it.row();
+        this.width = it.width();
     }
 }

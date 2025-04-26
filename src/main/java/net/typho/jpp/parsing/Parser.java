@@ -3,12 +3,22 @@ package net.typho.jpp.parsing;
 import net.typho.jpp.lexical.Lexer;
 import net.typho.jpp.lexical.LexicalIterator;
 
+import java.util.NoSuchElementException;
+
 public interface Parser {
     default void parse(Lexer lexer) {
         LexicalIterator it = lexer.iterator();
 
         while (it.hasNext()) {
-            take(it.next(), it);
+            String next;
+
+            try {
+                next = it.next();
+            } catch (NoSuchElementException e) {
+                break;
+            }
+
+            take(next, it);
         }
     }
 

@@ -27,7 +27,7 @@ public class JPP {
             if (!p.endsWith("JPP.java")) {
                 try {
                     System.out.println("Parsing " + p);
-                    Lexer lexer = new StringLexer(Files.readString(p));
+                    Lexer lexer = new StringLexer(p);
                     Parser parser = new DefaultParser();
 
                     parser.parse(lexer);

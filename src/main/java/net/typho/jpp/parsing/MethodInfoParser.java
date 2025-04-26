@@ -13,52 +13,53 @@ public class MethodInfoParser implements Parser {
         this.name = name;
     }
 
+    protected void code(LexicalIterator it) {
+        String next = it.next();
+
+        switch (next) {
+            case "{": {
+                int brackets = 1, lines = 0;
+
+                while (brackets != 0) {
+                    next = it.next();
+
+                    switch (next) {
+                        case "{": {
+                            brackets++;
+                            break;
+                        }
+                        case "}": {
+                            brackets--;
+                            break;
+                        }
+                        case ";": {
+                            lines++;
+                            break;
+                        }
+                    }
+                }
+
+                System.out.println("\t" + lines + " lines");
+                break;
+            }
+            case ";": {
+                System.out.println("\tNo method body");
+                break;
+            }
+            default: {
+                throw new ParsingException(it, "Unexpected token " + next);
+            }
+        }
+
+        parent.current = attrib.body;
+        attrib.body.modifiers.clear();
+    }
+
     @Override
     public void take(String token, LexicalIterator it) {
         switch (token) {
             case ")": {
-                String next = it.next();
-
-                switch (next) {
-                    case "{": {
-                        int brackets = 1, lines = 0;
-
-                        while (brackets != 0) {
-                            next = it.next();
-
-                            switch (next) {
-                                case "{": {
-                                    brackets++;
-                                    break;
-                                }
-                                case "}": {
-                                    brackets--;
-                                    break;
-                                }
-                                case ";": {
-                                    lines++;
-                                    break;
-                                }
-                            }
-                        }
-
-                        System.out.println("\t" + lines + " lines");
-
-                        break;
-                    }
-                    case ";": {
-                        System.out.println("\tNo method body");
-                        break;
-                    }
-                    default: {
-                        throw new ParsingException();
-                    }
-                }
-
-                System.out.println();
-
-                parent.current = attrib.body;
-                attrib.body.modifiers.clear();
+                code(it);
                 break;
             }
             default: {
@@ -70,7 +71,7 @@ public class MethodInfoParser implements Parser {
                     if (next.equals(",")) {
                         break;
                     } else if (next.equals(")")) {
-                        it.previous();
+                        code(it);
                         break;
                     }
 
