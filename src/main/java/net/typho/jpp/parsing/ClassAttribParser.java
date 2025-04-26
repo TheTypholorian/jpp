@@ -21,10 +21,10 @@ public class ClassAttribParser implements Parser {
         switch (token) {
             case "(": {
                 if (name == null) {
-                    System.out.println("\tConstructor");
-                } else {
-                    System.out.println("\tMethod");
+                    name = "new";
                 }
+
+                System.out.println("\tMethod " + name);
 
                 parent.current = new MethodInfoParser(parent, this, name);
                 break;

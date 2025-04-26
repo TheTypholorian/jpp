@@ -22,10 +22,10 @@ public class RootParser implements Parser {
                 parent.modifiers.add(token);
                 break;
             }
-            case "class": {
-                System.out.println("Create class " + parent.modifiers + " " + it.next());
+            case "class", "interface", "enum": {
+                System.out.println("Create " + token + " " + parent.modifiers + " " + it.next());
                 parent.modifiers.clear();
-                parent.current = new ClassInfoParser(parent);
+                parent.current = new ClassInfoParser(parent, token);
                 break;
             }
         }

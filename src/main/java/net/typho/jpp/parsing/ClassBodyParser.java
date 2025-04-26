@@ -19,7 +19,7 @@ public class ClassBodyParser implements Parser {
     @Override
     public void take(String token, LexicalIterator it) {
         switch (token) {
-            case "public", "private", "static", "final": {
+            case "public", "private", "static", "final", "default": {
                 modifiers.add(token);
                 break;
             }

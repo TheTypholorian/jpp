@@ -6,8 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DefaultParser implements Parser {
-    final List<String> modifiers = new LinkedList<>();
-    final List<String> imports = new LinkedList<>();
+    final List<String> modifiers = new LinkedList<>(), imports = new LinkedList<>();
     Parser current;
 
     final Parser root = new RootParser(this);

@@ -7,10 +7,12 @@ import java.util.List;
 
 public class ClassInfoParser implements Parser {
     public final DefaultParser parent;
+    public final String type;
     final List<String> parents = new LinkedList<>();
 
-    public ClassInfoParser(DefaultParser parent) {
+    public ClassInfoParser(DefaultParser parent, String type) {
         this.parent = parent;
+        this.type = type;
     }
 
     @Override

@@ -19,24 +19,39 @@ public class MethodInfoParser implements Parser {
             case ")": {
                 String next = it.next();
 
-                if (!next.equals("{")) {
-                    throw new ParsingException();
-                }
+                switch (next) {
+                    case "{": {
+                        int brackets = 1, lines = 0;
 
-                int brackets = 1;
+                        while (brackets != 0) {
+                            next = it.next();
 
-                while (brackets != 0) {
-                    next = it.next();
-
-                    switch (next) {
-                        case "{": {
-                            brackets++;
-                            break;
+                            switch (next) {
+                                case "{": {
+                                    brackets++;
+                                    break;
+                                }
+                                case "}": {
+                                    brackets--;
+                                    break;
+                                }
+                                case ";": {
+                                    lines++;
+                                    break;
+                                }
+                            }
                         }
-                        case "}": {
-                            brackets--;
-                            break;
-                        }
+
+                        System.out.println("\t" + lines + " lines");
+
+                        break;
+                    }
+                    case ";": {
+                        System.out.println("\tNo method body");
+                        break;
+                    }
+                    default: {
+                        throw new ParsingException();
                     }
                 }
 

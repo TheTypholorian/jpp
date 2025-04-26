@@ -3,8 +3,6 @@ package net.typho.jpp.parsing;
 import net.typho.jpp.lexical.Lexer;
 import net.typho.jpp.lexical.LexicalIterator;
 
-import java.util.Iterator;
-
 public interface Parser {
     default void parse(Lexer lexer) {
         LexicalIterator it = lexer.iterator();
