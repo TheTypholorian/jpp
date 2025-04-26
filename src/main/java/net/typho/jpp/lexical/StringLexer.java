@@ -3,6 +3,7 @@ package net.typho.jpp.lexical;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class StringLexer implements Lexer {
     public final List<String> tokens = new LinkedList<>();
@@ -53,7 +54,7 @@ public class StringLexer implements Lexer {
     @Override
     public LexicalIterator iterator() {
         return new LexicalIterator() {
-            public final Iterator<String> it = tokens.iterator();
+            public final ListIterator<String> it = tokens.listIterator();
 
             @Override
             public boolean hasNext() {
@@ -63,6 +64,41 @@ public class StringLexer implements Lexer {
             @Override
             public String next() {
                 return it.next();
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return it.hasPrevious();
+            }
+
+            @Override
+            public String previous() {
+                return it.previous();
+            }
+
+            @Override
+            public int nextIndex() {
+                return it.nextIndex();
+            }
+
+            @Override
+            public int previousIndex() {
+                return it.previousIndex();
+            }
+
+            @Override
+            public void remove() {
+                it.remove();
+            }
+
+            @Override
+            public void set(String s) {
+                it.set(s);
+            }
+
+            @Override
+            public void add(String s) {
+                it.add(s);
             }
         };
     }

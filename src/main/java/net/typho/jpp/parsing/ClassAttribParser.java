@@ -21,13 +21,12 @@ public class ClassAttribParser implements Parser {
         switch (token) {
             case "(": {
                 if (name == null) {
-                    System.out.println("Constructor");
-                    parent.current = new ConstructorParser(parent, this);
+                    System.out.println("\tConstructor");
                 } else {
-                    System.out.println("Method");
-                    parent.current = new MethodInfoParser(parent, this);
+                    System.out.println("\tMethod");
                 }
 
+                parent.current = new MethodInfoParser(parent, this, name);
                 break;
             }
             case "<": {
@@ -35,7 +34,7 @@ public class ClassAttribParser implements Parser {
                     typeParams.add(it.next());
                 } while (!it.next().equals(">"));
 
-                System.out.println("Type params " + typeParams);
+                System.out.println("\tType params " + typeParams);
 
                 break;
             }
@@ -43,8 +42,8 @@ public class ClassAttribParser implements Parser {
                 if (name == null) {
                     name = token;
                 } else {
-                    System.out.println("Field");
-                    (parent.current = new FieldParser(parent, this)).take(token, it);
+                    System.out.println("\tField \"" + name + "\"");
+                    (parent.current = new FieldParser(parent, this, name)).take(token, it);
                 }
                 break;
             }

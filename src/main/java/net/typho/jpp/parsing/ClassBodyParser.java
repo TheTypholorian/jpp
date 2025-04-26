@@ -27,9 +27,14 @@ public class ClassBodyParser implements Parser {
                 parent.current = info;
                 break;
             }
+            case "@": {
+                System.out.println("\tAnnotation @" + it.next());
+
+                break;
+            }
             default: {
                 type = token;
-                System.out.println("Unknown attribute " + modifiers + " " + type);
+                System.out.println("\tUnknown attribute " + modifiers + " " + type);
                 parent.current = new ClassAttribParser(parent, this);
                 break;
             }

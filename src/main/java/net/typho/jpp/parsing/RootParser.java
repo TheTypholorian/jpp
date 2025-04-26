@@ -13,7 +13,7 @@ public class RootParser implements Parser {
     public void take(String token, LexicalIterator it) {
         switch (token) {
             case "import": {
-                String imp = it.concatUntil(";");
+                String imp = String.join("", it.concatUntil(";"));
                 System.out.println("Import " + imp);
                 parent.imports.add(imp);
                 break;
