@@ -34,29 +34,53 @@ public class StringLexer implements Lexer {
         boolean commented = false;
 
         for (String s : list) {
-            int index = s.indexOf("//");
+            boolean inString = false;
+            boolean commented1 = commented;
 
-            if (index != -1) {
-                s = s.substring(0, index);
+            c:
+            for (int i = 0; i < s.length() - 1; i++) {
+                char c = s.charAt(i);
+
+                switch (c) {
+                    case '/': {
+                        if (!inString) {
+                            switch (s.charAt(i + 1)) {
+                                case '/': {
+                                    int len = s.length();
+                                    s = s.substring(0, i) + " ".repeat(len - i);
+                                    break c;
+                                }
+                                case '*': {
+                                    if (!commented) {
+                                        int len = s.length();
+                                        s = s.substring(0, i) + " ".repeat(len - i);
+                                        commented = true;
+                                        break c;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    case '*': {
+                        if (commented && !inString) {
+                            switch (s.charAt(i + 1)) {
+                                case '/': {
+                                    s = s.substring(i + 2);
+                                    commented = false;
+                                    break c;
+                                }
+                            }
+                        }
+                    }
+                    case '"': {
+                        inString = !inString;
+                        break;
+                    }
+                }
             }
 
-            if (commented) {
-                index = s.indexOf("/*");
-
-                if (index != -1) {
-                    s = s.substring(index + "/*".length());
-                    commented = false;
-                }
-            } else {
-                index = s.indexOf("*/");
-
-                if (index != -1) {
-                    s = s.substring(0, index);
-                    commented = true;
-                }
-            }
-
-            if (!commented) {
+            if (!commented1 || !commented) {
                 s.chars().forEach(c -> {
                     pos[1]++;
 
@@ -77,10 +101,10 @@ public class StringLexer implements Lexer {
                     b[0].append((char) c);
                 });
             }
-
-            pos[0]++;
-            pos[1] = 0;
         }
+
+        pos[0]++;
+        pos[1] = 0;
 
         end.run();
     }

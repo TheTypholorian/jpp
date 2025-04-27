@@ -24,7 +24,7 @@ public class JPP {
                 });
             }
         } else {
-            if (p.getFileName().toString().endsWith(".java")) {
+            if (p.toString().endsWith(".java") && p.toString().contains("\\src\\main\\java\\")) {
                 try {
                     System.out.println("Parsing " + p);
                     Lexer lexer = new StringLexer(p);
@@ -40,6 +40,6 @@ public class JPP {
 
     public static void main(String[] args) throws IOException {
         parse(Path.of("src", "main", "java", "net", "typho", "jpp"));
-        parse(new File("C:\\Users\\evan\\IdeaProjects\\code2\\").toPath());
+        parse(new File("D:\\_code").toPath());
     }
 }

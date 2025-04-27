@@ -9,7 +9,6 @@ public class ClassAttribParser implements Parser {
     public final DefaultParser parent;
     public final ClassBodyParser body;
     String name;
-    final List<String> typeParams = new LinkedList<>();
 
     public ClassAttribParser(DefaultParser parent, ClassBodyParser body) {
         this.parent = parent;
@@ -31,10 +30,10 @@ public class ClassAttribParser implements Parser {
             }
             case "<": {
                 do {
-                    typeParams.add(it.next());
+                    body.typeParams.add(it.next());
                 } while (!it.next().equals(">"));
 
-                System.out.println("\tType params " + typeParams);
+                System.out.println("\tType params " + body.typeParams);
 
                 break;
             }
