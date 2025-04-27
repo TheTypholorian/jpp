@@ -46,7 +46,7 @@ public class MethodInfoParser implements Parser {
             }
             case "throws": {
                 while (true) {
-                    System.out.println("Throws " + it.next());
+                    System.out.println("\tThrows " + it.next());
 
                     next = it.next();
 

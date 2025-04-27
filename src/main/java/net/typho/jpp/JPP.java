@@ -5,6 +5,7 @@ import net.typho.jpp.lexical.StringLexer;
 import net.typho.jpp.parsing.DefaultParser;
 import net.typho.jpp.parsing.Parser;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,7 +24,7 @@ public class JPP {
                 });
             }
         } else {
-            if (!p.endsWith("JPP.java")) {
+            if (p.getFileName().toString().endsWith(".java")) {
                 try {
                     System.out.println("Parsing " + p);
                     Lexer lexer = new StringLexer(p);
@@ -38,6 +39,7 @@ public class JPP {
     }
 
     public static void main(String[] args) throws IOException {
-        parse(Path.of("src", "main", "java", "net", "typho", "jpp", "parsing", "MethodInfoParser.java"));
+        parse(Path.of("src", "main", "java", "net", "typho", "jpp"));
+        parse(new File("C:\\Users\\evan\\IdeaProjects\\code2\\").toPath());
     }
 }

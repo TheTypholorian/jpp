@@ -31,25 +31,52 @@ public class StringLexer implements Lexer {
             }
         };
 
+        boolean commented = false;
+
         for (String s : list) {
-            s.chars().forEach(c -> {
-                pos[1]++;
+            int index = s.indexOf("//");
 
-                switch (c) {
-                    case ' ': {
-                        end.run();
-                        return;
-                    }
-                    case '\'', '"', '[', ']', '{', '}', '\\', '|', '`', '~', '<', '>', '/', '?', '.', ',', '-', '=', '+', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', ';', ':': {
-                        end.run();
+            if (index != -1) {
+                s = s.substring(0, index);
+            }
 
-                        tokens.add(new Token(String.valueOf((char) c), pos[0], pos[1] - 1, 1));
-                        return;
-                    }
+            if (commented) {
+                index = s.indexOf("/*");
+
+                if (index != -1) {
+                    s = s.substring(index + "/*".length());
+                    commented = false;
                 }
+            } else {
+                index = s.indexOf("*/");
 
-                b[0].append((char) c);
-            });
+                if (index != -1) {
+                    s = s.substring(0, index);
+                    commented = true;
+                }
+            }
+
+            if (!commented) {
+                s.chars().forEach(c -> {
+                    pos[1]++;
+
+                    switch (c) {
+                        case ' ': {
+                            end.run();
+                            return;
+                        }
+                        case '\'', '"', '[', ']', '{', '}', '\\', '|', '`', '~', '<', '>', '/', '?', '.', ',', '-', '=',
+                             '+', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', ';', ':': {
+                            end.run();
+
+                            tokens.add(new Token(String.valueOf((char) c), pos[0], pos[1] - 1, 1));
+                            return;
+                        }
+                    }
+
+                    b[0].append((char) c);
+                });
+            }
 
             pos[0]++;
             pos[1] = 0;

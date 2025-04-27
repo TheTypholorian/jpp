@@ -50,7 +50,6 @@ public interface LexicalIterator extends Iterator<String> {
             @Override
             public String next() {
                 last = it.next();
-                System.out.println("\t\tNext: " + last.text());
                 return last.text();
             }
 

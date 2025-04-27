@@ -24,7 +24,7 @@ public class ClassAttribParser implements Parser {
                     name = "new";
                 }
 
-                System.out.println("\tMethod " + name);
+                System.out.println("\tMethod \"" + name + "\"");
 
                 parent.current = new MethodInfoParser(parent, this, name);
                 break;
