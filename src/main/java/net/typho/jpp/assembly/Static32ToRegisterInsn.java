@@ -4,9 +4,9 @@ import java.io.IOException;
 
 public class Static32ToRegisterInsn implements Insn {
     public final int value;
-    public final Register dst;
+    public final Register64 dst;
 
-    public Static32ToRegisterInsn(int value, Register dst) {
+    public Static32ToRegisterInsn(int value, Register64 dst) {
         this.value = value;
         this.dst = dst;
     }
