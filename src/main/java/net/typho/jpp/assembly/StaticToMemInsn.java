@@ -21,8 +21,8 @@ public class StaticToMemInsn implements Insn {
         out.write(0x48);
         out.write(0xC7);
         out.write(0xC0);
-        out.write(new int[]{address});
-        out.write(value);
+        out.ints(address);
+        out.bytes(value);
     }
 }
 

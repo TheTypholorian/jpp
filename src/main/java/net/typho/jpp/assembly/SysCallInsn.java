@@ -2,7 +2,7 @@ package net.typho.jpp.assembly;
 
 import java.io.IOException;
 
-public class SyscallInsn implements Insn {
+public class SysCallInsn implements Insn {
     public static final int READ = 0;
     public static final int WRITE = 1;
     public static final int OPEN = 2;

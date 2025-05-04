@@ -4,20 +4,20 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public abstract class ASMOutputStream extends OutputStream {
-    public void write(byte... b) throws IOException {
+    public void bytes(byte... b) throws IOException {
         for (byte v : b) {
             write(v);
         }
     }
 
-    public void write(short... s) throws IOException {
+    public void shorts(short... s) throws IOException {
         for (short v : s) {
             write(v);
             write(v >> 8);
         }
     }
 
-    public void write(int... i) throws IOException {
+    public void ints(int... i) throws IOException {
         for (int v : i) {
             write(v);
             write(v >> 8);
@@ -26,7 +26,7 @@ public abstract class ASMOutputStream extends OutputStream {
         }
     }
 
-    public void write(long... l) throws IOException {
+    public void longs(long... l) throws IOException {
         for (long v : l) {
             write((byte) v);
             write((byte) (v >> 8));

@@ -56,24 +56,21 @@ public class AssemblyEditor {
 
         Assembler asm = new Assembler();
 
-        byte[] text = "Hello World (from java)\n".getBytes();
+        byte[] text = "Hello from java, your one and only friend!".getBytes();
 
-        int staticAddress = 0x401000;
-        int textLength = text.length;
+        //asm.add(new ByteArrayInsn(0x48, 0x8D, 0x35, 0x1A, 0x00, 0x00, 0x00));
 
-        for (int i = 0; i < textLength; i++) {
-            // Write the string bytes to the static address
-            asm.add(new StaticTo32RegisterInsn(0x48, Register32.eax)); // mov eax, 0x48 (syscall number for write)
-            asm.add(new StaticTo32RegisterInsn(1, Register32.edi)); // mov edi, 1 (stdout)
-            asm.add(new StaticTo64RegisterInsn(staticAddress + i, Register64.rsi)); // mov rsi, [address of string + i]
-            asm.add(new StaticTo32RegisterInsn(1, Register32.edx)); // mov edx, 1 (length of string)
-            asm.add(new SyscallInsn());
-        }
+        asm.add(new LEA64Insn(Register64.rsi, null, null, 1, 0x1A));
+        asm.add(new StaticTo32RegisterInsn(text.length, Register32.edx));
+        asm.add(new StaticTo32RegisterInsn(1, Register32.edi));
+        asm.add(new StaticTo32RegisterInsn(SysCallInsn.WRITE, Register32.eax));
+        asm.add(new SysCallInsn());
 
-// Step 2: Perform a system exit syscall after printing
-        asm.add(new StaticTo32RegisterInsn(60, Register32.eax)); // mov eax, 60 (syscall number for exit)
-        asm.add(new Xor32RegisterInsn(Register32.edi)); // xor edi, edi (exit code 0)
-        asm.add(new SyscallInsn()); // syscall
+        asm.add(new StaticTo32RegisterInsn(SysCallInsn.EXIT, Register32.eax));
+        asm.add(new Xor32RegisterInsn(Register32.edi));
+        asm.add(new SysCallInsn());
+
+        asm.add(new ByteArrayInsn(text));
 
         byte[] b = asm.write();
 

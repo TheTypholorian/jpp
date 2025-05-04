@@ -20,6 +20,6 @@ public class StaticTo64RegisterInsn implements Insn {
     public void write(ASMOutputStream out) throws IOException {
         out.write(0x48);
         out.write(0xB8 | dst.ordinal());
-        out.write(value);
+        out.longs(value);
     }
 }

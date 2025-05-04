@@ -21,6 +21,6 @@ public class Static32ToRegisterInsn implements Insn {
         out.write(0x48);
         out.write(0xC7);
         out.write(0xC0 | dst.ordinal());
-        out.write(new int[]{value});
+        out.ints(value);
     }
 }
