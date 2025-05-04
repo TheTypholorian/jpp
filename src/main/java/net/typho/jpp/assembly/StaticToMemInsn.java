@@ -17,7 +17,7 @@ public class StaticToMemInsn implements Insn {
     }
 
     @Override
-    public void write(ASMOutputStream out) throws IOException {
+    public void write(int before, ASMOutputStream out) throws IOException {
         out.write(0x48);
         out.write(0xC7);
         out.write(0xC0);

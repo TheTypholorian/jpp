@@ -5,5 +5,5 @@ import java.io.IOException;
 public interface Insn {
     int bytes();
 
-    void write(ASMOutputStream out) throws IOException;
+    void write(int before, ASMOutputStream out) throws IOException;
 }

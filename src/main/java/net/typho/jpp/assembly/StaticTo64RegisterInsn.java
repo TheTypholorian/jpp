@@ -17,7 +17,7 @@ public class StaticTo64RegisterInsn implements Insn {
     }
 
     @Override
-    public void write(ASMOutputStream out) throws IOException {
+    public void write(int before, ASMOutputStream out) throws IOException {
         out.write(0x48);
         out.write(0xB8 | dst.ordinal());
         out.longs(value);

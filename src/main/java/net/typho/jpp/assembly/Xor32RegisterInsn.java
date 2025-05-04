@@ -20,7 +20,7 @@ public class Xor32RegisterInsn implements Insn {
     }
 
     @Override
-    public void write(ASMOutputStream out) throws IOException {
+    public void write(int before, ASMOutputStream out) throws IOException {
         out.write(0x31);
         out.write(0b11000000 | (src.ordinal() << 3) | dst.ordinal());
     }

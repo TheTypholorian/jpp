@@ -41,8 +41,15 @@ public class Assembler {
     }
 
     public void write(ASMOutputStream out) throws IOException {
+        int before = 0;
+
         for (Insn insn : instructions) {
-            insn.write(out);
+            insn.write(before, out);
+            before += insn.bytes();
+        }
+
+        for (byte[] d : data) {
+            out.write(d);
         }
     }
 

@@ -23,7 +23,7 @@ public class ByteArrayInsn implements Insn {
     }
 
     @Override
-    public void write(ASMOutputStream out) throws IOException {
+    public void write(int before, ASMOutputStream out) throws IOException {
         out.write(b);
     }
 }

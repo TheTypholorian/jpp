@@ -30,7 +30,7 @@ public class LEA64Insn implements Insn {
     }
 
     @Override
-    public void write(ASMOutputStream out) throws IOException {
+    public void write(int before, ASMOutputStream out) throws IOException {
         int rex = 0x48;
 
         if ((dst.ordinal() & 8) != 0) {

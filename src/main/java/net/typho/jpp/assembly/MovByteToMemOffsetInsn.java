@@ -19,7 +19,7 @@ public class MovByteToMemOffsetInsn implements Insn {
     }
 
     @Override
-    public void write(ASMOutputStream out) throws IOException {
+    public void write(int before, ASMOutputStream out) throws IOException {
         out.write(0xC6);
         out.write(0x40 | base.ordinal());
         out.write(offset);

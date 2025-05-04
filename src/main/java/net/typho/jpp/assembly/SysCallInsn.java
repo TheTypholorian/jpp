@@ -75,7 +75,7 @@ public class SysCallInsn implements Insn {
     }
 
     @Override
-    public void write(ASMOutputStream out) throws IOException {
+    public void write(int before, ASMOutputStream out) throws IOException {
         out.write(0x0F);
         out.write(0x05);
     }
