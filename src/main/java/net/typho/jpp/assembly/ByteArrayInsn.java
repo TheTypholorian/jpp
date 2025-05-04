@@ -3,7 +3,7 @@ package net.typho.jpp.assembly;
 import java.io.IOException;
 
 public class ByteArrayInsn implements Insn {
-    public final byte[] b;
+    public byte[] b;
 
     public ByteArrayInsn(byte... b) {
         this.b = b;

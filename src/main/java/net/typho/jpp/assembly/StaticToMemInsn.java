@@ -3,8 +3,8 @@ package net.typho.jpp.assembly;
 import java.io.IOException;
 
 public class StaticToMemInsn implements Insn {
-    private final byte[] value;
-    private final int address;
+    public byte[] value;
+    public int address;
 
     public StaticToMemInsn(byte[] value, int address) {
         this.value = value;

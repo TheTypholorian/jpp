@@ -58,16 +58,28 @@ public class AssemblyEditor {
 
         byte[] text = "Hello from java, your one and only friend!".getBytes();
 
-        //asm.add(new ByteArrayInsn(0x48, 0x8D, 0x35, 0x1A, 0x00, 0x00, 0x00));
+        asm.add(new LEA64Insn(Register64.rsi, null, null, 1, 0) {
+            @Override
+            public void write(ASMOutputStream out) throws IOException {
+                disp = asm.codeBytes() - 0x31;
+                super.write(out);
+            }
 
-        asm.add(new LEA64Insn(Register64.rsi, null, null, 1, 0x1A));
+            @Override
+            protected boolean hasDisp() {
+                return true;
+            }
+        });
         asm.add(new StaticTo32RegisterInsn(text.length, Register32.edx));
         asm.add(new StaticTo32RegisterInsn(1, Register32.edi));
         asm.add(new StaticTo32RegisterInsn(SysCallInsn.WRITE, Register32.eax));
         asm.add(new SysCallInsn());
 
+        asm.add(new StaticTo32RegisterInsn(69, Register32.edi));
+        asm.add(new StaticTo32RegisterInsn(420, Register32.esi));
+        asm.add(new Mul32Insn(Register32.edi, Register32.esi));
+
         asm.add(new StaticTo32RegisterInsn(SysCallInsn.EXIT, Register32.eax));
-        asm.add(new Xor32RegisterInsn(Register32.edi));
         asm.add(new SysCallInsn());
 
         asm.add(new ByteArrayInsn(text));

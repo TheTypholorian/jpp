@@ -3,7 +3,7 @@ package net.typho.jpp.assembly;
 import java.io.IOException;
 
 public class Add64Insn implements Insn {
-    public final Register64 src, dst;
+    public Register64 src, dst;
 
     public Add64Insn(Register64 dst, Register64 src) {
         this.dst = dst;
