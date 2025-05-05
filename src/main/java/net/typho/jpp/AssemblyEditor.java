@@ -30,22 +30,8 @@ public class AssemblyEditor {
         Assembler asm = new Assembler(null);
         byte[] header = Files.readAllBytes(Path.of("header.bin"));
 
-        byte[] text1 = "Hello World\n".getBytes(), text2 = "Hello Again!\n".getBytes();
-
-        int t1 = asm.data(text1);
-        int t2 = asm.data(text2);
-
-        asm.add(new DelayedLEA64Insn(Register64.rsi, null, null, 1, 0, asm, t1));
-        asm.add(new StaticTo32RegisterInsn(text1.length, Register32.edx));
-        asm.add(new StaticTo32RegisterInsn(1, Register32.edi));
-        asm.add(new StaticTo32RegisterInsn(SysCallInsn.WRITE, Register32.eax));
-        asm.add(new SysCallInsn());
-
-        asm.add(new DelayedLEA64Insn(Register64.rsi, null, null, 1, 0, asm, t2));
-        asm.add(new StaticTo32RegisterInsn(text2.length, Register32.edx));
-        asm.add(new StaticTo32RegisterInsn(1, Register32.edi));
-        asm.add(new StaticTo32RegisterInsn(SysCallInsn.WRITE, Register32.eax));
-        asm.add(new SysCallInsn());
+        asm.add(new StaticPrintInstruction("Hello World\n"));
+        asm.add(new StaticPrintInstruction("Hello Again!\n"));
 
         asm.add(new StaticTo32RegisterInsn(99, Register32.edi));
         asm.add(new StaticTo32RegisterInsn(222, Register32.esi));
@@ -56,11 +42,8 @@ public class AssemblyEditor {
 
         byte[] b = asm.write();
 
-        writeInt(asm.dataBytes(), header, 0x60);
-        writeInt(asm.dataBytes(), header, 0x68);
-
-        writeInt(asm.codeBytes(), header, 0x98);
-        writeInt(asm.codeBytes(), header, 0xA0);
+        writeInt(header.length + b.length, header, 0x60);
+        writeInt(header.length + b.length, header, 0x68);
 
         try (FileOutputStream out = new FileOutputStream("test.bin")) {
             out.write(header);
