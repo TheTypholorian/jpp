@@ -21,31 +21,54 @@ public class Assembler implements Parser {
 
     @Override
     public void take(String token, LexicalIterator it) {
-        switch (token) {
-            case "Console": {
-                switch (it.next()) {
-                    case "log", "print": {
-                        it.next();
-                        it.next();
-                        StringBuilder print = new StringBuilder();
+        List<String> path = new LinkedList<>();
+        List<List<String>> args = new LinkedList<>();
+        path.add(token);
 
-                        while (true) {
-                            String n = it.next();
+        while (true) {
+            String next = it.next();
 
-                            if (n.equals("\"")) {
-                                break;
-                            }
+            if (next.equals(";")) {
+                break;
+            }
 
-                            print.append(n).append(' ');
+            switch (next) {
+                case ".": {
+                    path.add(it.next());
+                    break;
+                }
+                case "(": {
+                    List<String> a = new LinkedList<>();
+
+                    while (true) {
+                        next = it.next();
+
+                        if (next.equals(")")) {
+                            break;
                         }
 
-                        print.setCharAt(print.length() - 1, '\n');
-
-                        break;
+                        if (!next.equals(",")) {
+                            a.add(next);
+                        }
                     }
+
+                    args.add(a);
+
+                    break;
+                }
+            }
+        }
+
+        if (path.getFirst().equals("Console")) {
+            if (path.get(1).startsWith("Print")) {
+                String text = args.getFirst().getFirst();
+                text = text.substring(1, text.length() - 1);
+
+                if (path.get(1).equals("Println")) {
+                    text += '\n';
                 }
 
-                break;
+                parent.asm.add(new StaticPrintInsn(text));
             }
         }
     }

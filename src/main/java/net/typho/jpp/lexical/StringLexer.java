@@ -3,6 +3,7 @@ package net.typho.jpp.lexical;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class StringLexer implements Lexer {
 
             if (!res.isEmpty()) {
                 int len = og.length();
-                tokens.add(new Token(res, pos[0], pos[1] - len, len));
+                tokens.add(new Token(res, pos[0], pos[1], len));
                 b[0] = new StringBuilder();
             }
         };
@@ -81,25 +82,50 @@ public class StringLexer implements Lexer {
             }
 
             if (!commented1 || !commented) {
-                s.chars().forEach(c -> {
+                Iterator<Integer> it = s.chars().iterator();
+
+                while (it.hasNext()) {
+                    int c = it.next();
+
                     pos[1]++;
 
                     switch (c) {
                         case ' ': {
                             end.run();
-                            return;
+                            continue;
                         }
-                        case '\'', '"', '[', ']', '{', '}', '\\', '|', '`', '~', '<', '>', '/', '?', '.', ',', '-', '=',
+                        case '"': {
+                            StringBuilder literal = new StringBuilder("\"");
+
+                            while (true) {
+                                int next = it.next();
+
+                                literal.append((char) next);
+
+                                if (next == '"') {
+                                    break;
+                                }
+                            }
+
+                            end.run();
+
+                            String comp = literal.toString();
+
+                            tokens.add(new Token(comp, pos[0], pos[1], comp.length()));
+
+                            continue;
+                        }
+                        case '\'', '[', ']', '{', '}', '\\', '|', '`', '~', '<', '>', '/', '?', '.', ',', '-', '=',
                              '+', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', ';', ':': {
                             end.run();
 
-                            tokens.add(new Token(String.valueOf((char) c), pos[0], pos[1] - 1, 1));
-                            return;
+                            tokens.add(new Token(String.valueOf((char) c), pos[0], pos[1], 1));
+                            continue;
                         }
                     }
 
                     b[0].append((char) c);
-                });
+                }
             }
         }
 

@@ -1,6 +1,5 @@
 package net.typho.jpp;
 
-import net.typho.jpp.assembly.Assembler;
 import net.typho.jpp.lexical.Lexer;
 import net.typho.jpp.lexical.StringLexer;
 import net.typho.jpp.parsing.DefaultParser;
@@ -46,7 +45,7 @@ public class JPP {
         output[offset + 3] = (byte)((value >> 24) & 0xFF);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         //parse(Path.of("src", "main", "java", "net", "typho", "jpp"));
         //parse(new File("D:\\_code").toPath());
 
@@ -56,13 +55,12 @@ public class JPP {
             System.out.println("Parsing " + p);
             Lexer lexer = new StringLexer(p);
             DefaultParser parser = new DefaultParser();
-            Assembler asm = new Assembler(parser);
-            parser.current = asm;
+            parser.current = parser.asm;
             parser.parse(lexer);
 
-            byte[] b = asm.write(), header = Files.readAllBytes(Path.of("header.bin"));
+            byte[] b = parser.asm.write(), header = Files.readAllBytes(Path.of("header.bin"));
 
-            try (FileOutputStream out = new FileOutputStream("test.bin")) {
+            try (FileOutputStream out = new FileOutputStream("test2.bin")) {
                 writeInt(header.length + b.length, header, 0x60);
                 writeInt(header.length + b.length, header, 0x68);
 

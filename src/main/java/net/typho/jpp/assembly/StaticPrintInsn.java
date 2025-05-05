@@ -8,11 +8,7 @@ public class StaticPrintInsn extends MultiInsn {
     }
 
     public StaticPrintInsn(byte[] text) {
-        JumpInsn jump = new JumpInsn(text.length);
-
-        instructions.add(new LEA64Insn(Register64.rsi, null, null, 1, jump.bytes()));
-        instructions.add(jump);
-        instructions.add(new ByteArrayInsn(text));
+        instructions.add(new InlineData(text));
         instructions.add(new StaticTo32RegisterInsn(text.length, Register32.edx));
         instructions.add(new StaticTo32RegisterInsn(1, Register32.edi));
         instructions.add(new StaticTo32RegisterInsn(SysCallInsn.WRITE, Register32.eax));

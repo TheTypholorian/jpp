@@ -33,9 +33,9 @@ public class AssemblyEditor {
         asm.add(new StaticPrintInsn("Hello World\n"));
         asm.add(new StaticPrintInsn("Hello Again!\n"));
 
-        asm.add(new StaticTo32RegisterInsn(99, Register32.edi));
-        asm.add(new StaticTo32RegisterInsn(222, Register32.esi));
-        asm.add(new Mul32Insn(Register32.edi, Register32.esi));
+        asm.add(new StaticTo32RegisterInsn(1, Register32.edi));
+        asm.add(new StaticTo32RegisterInsn(1, Register32.esi));
+        asm.add(new Add32Insn(Register32.edi, Register32.esi));
 
         asm.add(new StaticTo32RegisterInsn(SysCallInsn.EXIT, Register32.eax));
         asm.add(new SysCallInsn());
