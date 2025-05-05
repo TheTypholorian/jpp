@@ -2,12 +2,12 @@ package net.typho.jpp.assembly;
 
 import java.nio.charset.StandardCharsets;
 
-public class StaticPrintInstruction extends MultiInsn {
-    public StaticPrintInstruction(String text) {
+public class StaticPrintInsn extends MultiInsn {
+    public StaticPrintInsn(String text) {
         this(text.getBytes(StandardCharsets.UTF_8));
     }
 
-    public StaticPrintInstruction(byte[] text) {
+    public StaticPrintInsn(byte[] text) {
         JumpInsn jump = new JumpInsn(text.length);
 
         instructions.add(new LEA64Insn(Register64.rsi, null, null, 1, jump.bytes()));

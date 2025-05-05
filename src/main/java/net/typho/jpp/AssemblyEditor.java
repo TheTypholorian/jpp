@@ -30,8 +30,8 @@ public class AssemblyEditor {
         Assembler asm = new Assembler(null);
         byte[] header = Files.readAllBytes(Path.of("header.bin"));
 
-        asm.add(new StaticPrintInstruction("Hello World\n"));
-        asm.add(new StaticPrintInstruction("Hello Again!\n"));
+        asm.add(new StaticPrintInsn("Hello World\n"));
+        asm.add(new StaticPrintInsn("Hello Again!\n"));
 
         asm.add(new StaticTo32RegisterInsn(99, Register32.edi));
         asm.add(new StaticTo32RegisterInsn(222, Register32.esi));
