@@ -7,7 +7,7 @@ import java.util.List;
 
 public class DefaultParser implements Parser {
     final List<String> modifiers = new LinkedList<>(), imports = new LinkedList<>();
-    Parser current;
+    public Parser current;
 
     final Parser root = new RootParser(this);
 

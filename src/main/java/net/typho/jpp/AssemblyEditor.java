@@ -27,7 +27,7 @@ public class AssemblyEditor {
         asm.add(new SyscallInsn());
          */
 
-        Assembler asm = new Assembler();
+        Assembler asm = new Assembler(null);
         byte[] header = Files.readAllBytes(Path.of("header.bin"));
 
         byte[] text1 = "Hello World\n".getBytes(), text2 = "Hello Again!\n".getBytes();
@@ -56,10 +56,13 @@ public class AssemblyEditor {
 
         byte[] b = asm.write();
 
-        try (FileOutputStream out = new FileOutputStream("test.bin")) {
-            writeInt(header.length + b.length, header, 0x60);
-            writeInt(header.length + b.length, header, 0x68);
+        writeInt(asm.dataBytes(), header, 0x60);
+        writeInt(asm.dataBytes(), header, 0x68);
 
+        writeInt(asm.codeBytes(), header, 0x98);
+        writeInt(asm.codeBytes(), header, 0xA0);
+
+        try (FileOutputStream out = new FileOutputStream("test.bin")) {
             out.write(header);
             out.write(b);
         }

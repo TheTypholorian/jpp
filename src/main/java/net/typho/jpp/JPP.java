@@ -1,10 +1,12 @@
 package net.typho.jpp;
 
+import net.typho.jpp.assembly.Assembler;
 import net.typho.jpp.lexical.Lexer;
 import net.typho.jpp.lexical.StringLexer;
 import net.typho.jpp.parsing.DefaultParser;
 import net.typho.jpp.parsing.Parser;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,8 +39,38 @@ public class JPP {
         }
     }
 
+    private static void writeInt(int value, byte[] output, int offset) {
+        output[offset] = (byte)(value & 0xFF);
+        output[offset + 1] = (byte)((value >> 8) & 0xFF);
+        output[offset + 2] = (byte)((value >> 16) & 0xFF);
+        output[offset + 3] = (byte)((value >> 24) & 0xFF);
+    }
+
     public static void main(String[] args) throws IOException {
         //parse(Path.of("src", "main", "java", "net", "typho", "jpp"));
         //parse(new File("D:\\_code").toPath());
+
+        try {
+            Path p = Path.of("test.jpp");
+
+            System.out.println("Parsing " + p);
+            Lexer lexer = new StringLexer(p);
+            DefaultParser parser = new DefaultParser();
+            Assembler asm = new Assembler(parser);
+            parser.current = asm;
+            parser.parse(lexer);
+
+            byte[] b = asm.write(), header = Files.readAllBytes(Path.of("header.bin"));
+
+            try (FileOutputStream out = new FileOutputStream("test.bin")) {
+                writeInt(header.length + b.length, header, 0x60);
+                writeInt(header.length + b.length, header, 0x68);
+
+                out.write(header);
+                out.write(b);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
