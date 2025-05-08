@@ -70,6 +70,14 @@ public class Assembler implements Parser {
 
                 parent.asm.add(new StaticPrintInsn(text));
             }
+        } else if (path.getFirst().equals("System")) {
+            if (path.get(1).startsWith("Exit")) {
+                int code = Integer.parseInt(args.getFirst().getFirst());
+
+                parent.asm.add(new StaticTo32RegisterInsn(code, Register32.edi));
+                parent.asm.add(new StaticTo32RegisterInsn(SysCallInsn.EXIT, Register32.eax));
+                parent.asm.add(new SysCallInsn());
+            }
         }
     }
 
