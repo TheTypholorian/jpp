@@ -63,7 +63,7 @@ public class LEA64Insn implements Insn {
         } else {
             if (disp == 0) {
                 mod = 0;
-            } else if (disp >= -128 && disp <= 127) {
+            } else if (disp == (byte) disp) {
                 mod = 1;
             } else {
                 mod = 2;

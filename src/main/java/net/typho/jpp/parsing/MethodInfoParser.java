@@ -1,9 +1,14 @@
 package net.typho.jpp.parsing;
 
+import net.typho.jpp.Literal;
+import net.typho.jpp.assembly.Insn;
+import net.typho.jpp.assembly.MethodInsn;
 import net.typho.jpp.lexical.LexicalIterator;
 import net.typho.jpp.tree.MethodNode;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 public class MethodInfoParser implements Parser {
     public final DefaultParser parent;
@@ -71,19 +76,41 @@ public class MethodInfoParser implements Parser {
         }
     }
 
+    protected void body(LexicalIterator it, List<Insn> instructions) {
+        while (it.hasNext()) {
+            String next = it.next();
+
+            if (next.equals("}")) {
+                break;
+            }
+
+            parent.asm.take(next, it, instructions);
+        }
+    }
+
     protected void code(LexicalIterator it) {
         if (node.modifiers.contains("native")) {
             String start = it.next();
+            int alloc;
+
+            if (start.equals("alloc")) {
+                alloc = (int) Literal.parseInt(it.next());
+                start = it.next();
+            } else {
+                alloc = 0;
+            }
 
             if (start.equals("{")) {
-                while (it.hasNext()) {
-                    String next = it.next();
-
-                    if (next.equals("}")) {
-                        break;
-                    }
-
-                    parent.asm.take(next, it);
+                if (!Objects.equals(node.name, "main")) {
+                    parent.asm.add(new MethodInsn(node.name) {
+                        @Override
+                        protected int body() {
+                            MethodInfoParser.this.body(it, instructions);
+                            return alloc;
+                        }
+                    });
+                } else {
+                    body(it, parent.asm.instructions);
                 }
             }
         } else {

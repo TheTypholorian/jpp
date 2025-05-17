@@ -11,8 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Assembler implements Parser {
-    private final List<Insn> instructions = new LinkedList<>();
-    private final List<byte[]> data = new LinkedList<>();
+    public final List<Insn> instructions = new LinkedList<>();
     private int off = 0;
 
     public final DefaultParser parent;
@@ -21,8 +20,7 @@ public class Assembler implements Parser {
         this.parent = parent;
     }
 
-    @Override
-    public void take(String token, LexicalIterator it) {
+    public void take(String token, LexicalIterator it, List<Insn> instructions) {
         switch (token) {
             case "loadstat": {
                 String reg = it.next();
@@ -64,6 +62,11 @@ public class Assembler implements Parser {
                 break;
             }
         }
+    }
+
+    @Override
+    public void take(String token, LexicalIterator it) {
+        take(token, it, instructions);
 
         /*
         List<String> path = new LinkedList<>();
@@ -131,15 +134,6 @@ public class Assembler implements Parser {
         instructions.add(insn);
     }
 
-    public int data(byte[] data) {
-        int r = off;
-
-        off += data.length;
-        this.data.add(data);
-
-        return r;
-    }
-
     public int codeBytes() {
         int b = 0;
 
@@ -150,19 +144,11 @@ public class Assembler implements Parser {
         return b;
     }
 
-    public int dataBytes() {
-        return off;
-    }
-
     public int totalBytes() {
-        return codeBytes() + dataBytes();
+        return codeBytes();
     }
 
     public void write(ASMOutputStream out) throws IOException {
-        for (byte[] d : data) {
-            out.write(d);
-        }
-
         int before = 0;
 
         for (Insn insn : instructions) {

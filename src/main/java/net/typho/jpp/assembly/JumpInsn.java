@@ -11,12 +11,12 @@ public class JumpInsn implements Insn {
 
     @Override
     public int bytes() {
-        return (num <= 127 && num >= -128) ? 2 : 5;
+        return num == (byte) num ? 2 : 5;
     }
 
     @Override
     public void write(int before, ASMOutputStream out) throws IOException {
-        if (num <= 127 && num >= -128) {
+        if (num == (byte) num) {
             out.write(0xEB);
             out.write(num);
         } else {

@@ -1,16 +1,36 @@
 package net.typho.jpp.testing;
 
 public class Testing {
-    public static native void main() {
-        loadstat rsi "This is a fairly long string that I am writing to attempt to overflow the single byte jump instruction and test if strings longer than 256 bytes work fine with loadstat instruction for native methods\n"
+/*
+    public static native void print(ptr) {
+        loadarg rsi ptr
 
         bf 01 00 00 00 // mov edi, 1
         ba c8 00 00 00 // mov edx, 200 (msg len)
         b8 01 00 00 00 // mov eax, 1 (print)
         0f 05 // syscall
+    }
+    */
 
-        bf 0f 00 00 00 // mov edi, 15
+    public static native void main() {
+        //loadstat rsi "This is a fairly long string that I am writing to attempt to overflow the single byte jump instruction and test if strings longer than 256 bytes work fine with loadstat instruction for native methods\n"
+
+        6A 04 // push 4
+        6A 03 // push 3
+
+        e8 0d 00 00 00 // call add2
+        48 83 c4 10 // add rsp, 16
+
+        89 C7 // mov edi, rax
+
+        //bf 0f 00 00 00 // mov edi, 69
         b8 3c 00 00 00 // mov eax, 60 (exit)
         0f 05 // syscall
+    }
+
+    public static native void add2() alloc 16 {
+        48 8b 45 10 // mov rax, [rbp+16]
+        48 8b 55 18 // mov rdx, [rbp+24]
+        48 01 d0 // add rax, rdx
     }
 }
