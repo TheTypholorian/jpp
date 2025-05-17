@@ -1,4 +1,14 @@
-Console.Println("Hello  world  !     ");
-Console.Println("This a 2nd line of text");
-Console.Println("Hopefully this works!");
-System.Exit(15);
+48 8d 35 02 00 00 00 // lea rsi, [rip+0x2]
+eb 0d // jmp +13
+
+// data to print
+48 65 6c 6c 6f 20 57 6f 72 6c 64 21 0a
+
+bf 01 00 00 00 // mov edi, 1
+ba 0d 00 00 00 // mov edx, 13 (msg len)
+b8 01 00 00 00 // mov eax, 1 (print)
+0f 05 // syscall
+
+bf 0f 00 00 00 // mov edi, 15
+b8 3c 00 00 00 // move eax, 0x3c (exit)
+0f 05 // syscall

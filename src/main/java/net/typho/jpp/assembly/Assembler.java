@@ -21,6 +21,15 @@ public class Assembler implements Parser {
 
     @Override
     public void take(String token, LexicalIterator it) {
+        byte[] b = new byte[token.length() >> 1];
+
+        for (int i = 0, j = 0; i < token.length(); i += 2, j++) {
+            b[j] = (byte) Integer.parseInt(String.valueOf(token.charAt(i)) + token.charAt(i + 1), 16);
+        }
+
+        instructions.add(new ByteArrayInsn(b));
+
+        /*
         List<String> path = new LinkedList<>();
         List<List<String>> args = new LinkedList<>();
         path.add(token);
@@ -79,6 +88,7 @@ public class Assembler implements Parser {
                 parent.asm.add(new SysCallInsn());
             }
         }
+         */
     }
 
     public void add(Insn insn) {
