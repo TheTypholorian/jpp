@@ -1,8 +1,4 @@
-48 8d 35 02 00 00 00 // lea rsi, [rip+0x2]
-eb 0d // jmp +13
-
-// data to print
-48 65 6c 6c 6f 20 57 6f 72 6c 64 21 0a
+loadstat rsi "Hello World!\n"
 
 bf 01 00 00 00 // mov edi, 1
 ba 0d 00 00 00 // mov edx, 13 (msg len)

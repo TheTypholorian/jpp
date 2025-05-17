@@ -6,6 +6,8 @@ public final class Literal {
     public static String parseString(String s) {
         if (s.charAt(0) == '"' && s.charAt(s.length() - 1) == '"') {
             s = s.substring(1, s.length() - 1);
+        } else {
+            return null;
         }
 
         if (!s.contains("\\")) {
@@ -103,6 +105,8 @@ public final class Literal {
                         break;
                     }
                 }
+            } else {
+                sb.append((char) c);
             }
         }
 
