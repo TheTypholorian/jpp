@@ -13,10 +13,15 @@ public class Testing {
     */
 
     public static native void main() {
-        //loadstat rsi "This is a fairly long string that I am writing to attempt to overflow the single byte jump instruction and test if strings longer than 256 bytes work fine with loadstat instruction for native methods\n"
+        loadstat rsi "This is a fairly long string that I am writing to attempt to overflow the single byte jump instruction and test if strings longer than 256 bytes work fine with loadstat instruction for native methods\n"
 
-        6A 04 // push 4
-        6A 03 // push 3
+        68 c8 00 00 00 // push 200
+        56 // push rsi
+        e8 3f 00 00 00 // call print
+        48 83 c4 0c // add rsp, 12
+
+        68 80 00 00 00 // push 128
+        68 80 00 00 00 // push 128
 
         e8 0d 00 00 00 // call add2
         48 83 c4 10 // add rsp, 16
@@ -28,9 +33,17 @@ public class Testing {
         0f 05 // syscall
     }
 
-    public static native void add2() alloc 16 {
+    public static native void add2(int a, int b) alloc 16 {
         48 8b 45 10 // mov rax, [rbp+16]
         48 8b 55 18 // mov rdx, [rbp+24]
         48 01 d0 // add rax, rdx
+    }
+
+    public static native void print(long ptr, int len) alloc 12 {
+        48 8b 75 10 // mov rsi, [rbp+16]
+        bf 01 00 00 00 // mov edi, 1
+        48 8b 55 18 // mov edx, [rbp+24]
+        b8 01 00 00 00 // mov eax, 1
+        0f 05 // syscall
     }
 }
