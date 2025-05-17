@@ -33,7 +33,7 @@ public class Assembler implements Parser {
                 byte[] data;
 
                 if (stringData == null) {
-                    String sData = firstData + String.join("", it.concatUntil("\n"));
+                    String sData = firstData + String.join("", it.concatUntil(";"));
                     data = new byte[sData.length() >> 1];
 
                     for (int i = 0, j = 0; i < sData.length(); i += 2, j++) {
