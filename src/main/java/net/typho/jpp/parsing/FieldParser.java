@@ -2,6 +2,8 @@ package net.typho.jpp.parsing;
 
 import net.typho.jpp.lexical.LexicalIterator;
 
+import java.util.LinkedList;
+
 public class FieldParser implements Parser {
     public final DefaultParser parent;
     public final ClassAttribParser attrib;
@@ -19,13 +21,13 @@ public class FieldParser implements Parser {
             case "=": {
                 System.out.println("\tInitialized with " + it.concatUntil(";", ","));
                 parent.current = attrib.body;
-                attrib.body.modifiers.clear();
+                attrib.body.modifiers = new LinkedList<>();
                 break;
             }
             case ";", ",": {
                 System.out.println("\tInitialized with null");
                 parent.current = attrib.body;
-                attrib.body.modifiers.clear();
+                attrib.body.modifiers = new LinkedList<>();
                 break;
             }
         }

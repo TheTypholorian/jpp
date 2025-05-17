@@ -8,7 +8,7 @@ import java.util.List;
 public class ClassBodyParser implements Parser {
     public final DefaultParser parent;
     public final ClassInfoParser info;
-    final List<String> modifiers = new LinkedList<>(), typeParams = new LinkedList<>();
+    List<String> modifiers = new LinkedList<>(), typeParams = new LinkedList<>();
     String type = null;
 
     public ClassBodyParser(DefaultParser parent, ClassInfoParser info) {
@@ -19,7 +19,7 @@ public class ClassBodyParser implements Parser {
     @Override
     public void take(String token, LexicalIterator it) {
         switch (token) {
-            case "public", "private", "protected", "static", "final", "default": {
+            case "public", "private", "protected", "static", "final", "default", "asm": {
                 modifiers.add(token);
                 break;
             }

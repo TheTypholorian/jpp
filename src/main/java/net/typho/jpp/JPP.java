@@ -50,17 +50,17 @@ public class JPP {
         //parse(new File("D:\\_code").toPath());
 
         try {
-            Path p = Path.of("test.jpp");
+            Path p = Path.of("classes.jpp");
 
             System.out.println("Parsing " + p);
             Lexer lexer = new StringLexer(p);
             DefaultParser parser = new DefaultParser();
-            parser.current = parser.asm;
+            //parser.current = parser.asm;
             parser.parse(lexer);
 
             byte[] b = parser.asm.write(), header = Files.readAllBytes(Path.of("header.bin"));
 
-            try (FileOutputStream out = new FileOutputStream("test2.bin")) {
+            try (FileOutputStream out = new FileOutputStream("test3.bin")) {
                 writeInt(header.length + b.length, header, 0x60);
                 writeInt(header.length + b.length, header, 0x68);
 

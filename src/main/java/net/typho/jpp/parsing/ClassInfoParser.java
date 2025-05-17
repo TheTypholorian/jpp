@@ -1,18 +1,19 @@
 package net.typho.jpp.parsing;
 
 import net.typho.jpp.lexical.LexicalIterator;
+import net.typho.jpp.tree.ClassNode;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class ClassInfoParser implements Parser {
     public final DefaultParser parent;
-    public final String type;
-    final List<String> parents = new LinkedList<>();
+    public final ClassNode node = new ClassNode();
 
     public ClassInfoParser(DefaultParser parent, String type) {
         this.parent = parent;
-        this.type = type;
+        node.type = type;
+        node.parents = new LinkedList<>();
+        node.methods = new LinkedList<>();
     }
 
     @Override
@@ -20,11 +21,11 @@ public class ClassInfoParser implements Parser {
         switch (token) {
             case "implements", "extends": {
                 while (true) {
-                    parents.add(it.next());
+                    node.parents.add(it.next());
                     String next = it.next();
 
                     if (!next.equals(",")) {
-                        System.out.println("Extends " + parents);
+                        System.out.println("Extends " + node.parents);
                         take(next, it);
                         break;
                     }

@@ -6,5 +6,5 @@ b8 01 00 00 00 // mov eax, 1 (print)
 0f 05 // syscall
 
 bf 0f 00 00 00 // mov edi, 15
-b8 3c 00 00 00 // move eax, 0x3c (exit)
+b8 3c 00 00 00 // mov eax, 60 (exit)
 0f 05 // syscall
