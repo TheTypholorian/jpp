@@ -72,7 +72,7 @@ public class MethodInfoParser implements Parser {
     }
 
     protected void code(LexicalIterator it) {
-        if (node.modifiers.contains("asm")) {
+        if (node.modifiers.contains("native")) {
             String start = it.next();
 
             if (start.equals("{")) {
