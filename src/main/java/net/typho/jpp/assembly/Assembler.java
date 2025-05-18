@@ -4,6 +4,7 @@ import net.typho.jpp.Literal;
 import net.typho.jpp.lexical.LexicalIterator;
 import net.typho.jpp.parsing.DefaultParser;
 import net.typho.jpp.parsing.Parser;
+import net.typho.jpp.tree.ClassNode;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,7 +13,6 @@ import java.util.List;
 
 public class Assembler implements Parser {
     public final List<Insn> instructions = new LinkedList<>();
-    private int off = 0;
 
     public final DefaultParser parent;
 
@@ -42,6 +42,11 @@ public class Assembler implements Parser {
                 }
 
                 instructions.add(new InlineData(Register64.valueOf(reg), data));
+
+                break;
+            }
+            case "invoke": {
+                instructions.add(new MethodInvokeInsn(it.next()));
 
                 break;
             }
@@ -157,7 +162,16 @@ public class Assembler implements Parser {
         }
     }
 
-    public byte[] write() throws IOException {
+    public void post(byte[] b, ClassNode node) {
+        int i = 0;
+
+        for (Insn insn : instructions) {
+            insn.post(b, i, node);
+            i += insn.bytes();
+        }
+    }
+
+    public byte[] write(ClassNode node) throws IOException {
         byte[] bytes = new byte[totalBytes()];
 
         write(new ASMOutputStream() {
@@ -168,6 +182,7 @@ public class Assembler implements Parser {
                 bytes[i++] = (byte) (b & 0xFF);
             }
         });
+        post(bytes, node);
 
         return bytes;
     }

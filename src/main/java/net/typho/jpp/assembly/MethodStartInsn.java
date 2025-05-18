@@ -1,16 +1,17 @@
 package net.typho.jpp.assembly;
 
+import net.typho.jpp.tree.MethodNode;
+
 import java.io.IOException;
 
 public class MethodStartInsn extends MultiInsn {
-    public final String name;
+    public final MethodNode node;
     protected final SubStatic64Insn insn;
-    public int local = 0;
 
-    public MethodStartInsn(String name) {
-        this.name = name;
+    public MethodStartInsn(MethodNode node) {
+        this.node = node;
         instructions.add(new ByteArrayInsn(0x55, 0x48, 0x89, 0xE5));
-        instructions.add(insn = new SubStatic64Insn(Register64.rsp, local) {
+        instructions.add(insn = new SubStatic64Insn(Register64.rsp, node.local) {
             @Override
             protected boolean small() {
                 return false;
@@ -20,7 +21,8 @@ public class MethodStartInsn extends MultiInsn {
 
     @Override
     public void write(int before, ASMOutputStream out) throws IOException {
-        insn.value = local;
+        node.address = before;
+        insn.value = node.local;
         super.write(before, out);
     }
 }

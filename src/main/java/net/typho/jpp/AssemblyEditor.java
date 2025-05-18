@@ -1,6 +1,7 @@
 package net.typho.jpp;
 
 import net.typho.jpp.assembly.*;
+import net.typho.jpp.tree.ClassNode;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class AssemblyEditor {
         asm.add(new StaticTo32RegisterInsn(SysCallInsn.EXIT, Register32.eax));
         asm.add(new SysCallInsn());
 
-        byte[] b = asm.write();
+        byte[] b = asm.write((ClassNode) null);
 
         writeInt(header.length + b.length, header, 0x60);
         writeInt(header.length + b.length, header, 0x68);

@@ -6,9 +6,9 @@ public class AddStatic64Insn implements Insn {
     public Register64 dst;
     public int value;
 
-    public AddStatic64Insn(Register64 dst, int imm) {
+    public AddStatic64Insn(Register64 dst, int value) {
         this.dst = dst;
-        this.value = imm;
+        this.value = value;
     }
 
     protected boolean small() {

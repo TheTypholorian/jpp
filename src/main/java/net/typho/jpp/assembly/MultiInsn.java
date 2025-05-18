@@ -1,5 +1,7 @@
 package net.typho.jpp.assembly;
 
+import net.typho.jpp.tree.ClassNode;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +25,14 @@ public class MultiInsn implements Insn {
         for (Insn insn : instructions) {
             insn.write(before, out);
             before += insn.bytes();
+        }
+    }
+
+    @Override
+    public void post(byte[] b, int i, ClassNode node) {
+        for (Insn insn : instructions) {
+            insn.post(b, i, node);
+            i += insn.bytes();
         }
     }
 }

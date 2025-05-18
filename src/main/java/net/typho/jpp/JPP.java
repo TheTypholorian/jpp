@@ -58,7 +58,7 @@ public class JPP {
             //parser.current = parser.asm;
             parser.parse(lexer);
 
-            byte[] b = parser.asm.write(), header = Files.readAllBytes(Path.of("header.bin"));
+            byte[] b = parser.asm.write(parser.classes.getFirst()), header = Files.readAllBytes(Path.of("header.bin"));
 
             try (FileOutputStream out = new FileOutputStream("test3.bin")) {
                 writeInt(header.length + b.length, header, 0x60);

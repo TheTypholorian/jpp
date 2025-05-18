@@ -14,6 +14,7 @@ public class ClassInfoParser implements Parser {
         node.type = type;
         node.parents = new LinkedList<>();
         node.methods = new LinkedList<>();
+        parent.classes.add(node);
     }
 
     @Override

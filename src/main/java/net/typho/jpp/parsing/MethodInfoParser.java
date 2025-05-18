@@ -102,7 +102,7 @@ public class MethodInfoParser implements Parser {
 
             if (start.equals("{")) {
                 if (!Objects.equals(node.name, "main")) {
-                    parent.asm.add(new MethodInsn(node.name) {
+                    parent.asm.add(new MethodInsn(node) {
                         @Override
                         protected int body() {
                             MethodInfoParser.this.body(it, instructions);

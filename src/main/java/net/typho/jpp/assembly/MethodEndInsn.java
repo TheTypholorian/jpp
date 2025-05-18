@@ -8,7 +8,7 @@ public class MethodEndInsn extends MultiInsn {
 
     public MethodEndInsn(MethodStartInsn start) {
         this.start = start;
-        instructions.add(insn = new AddStatic64Insn(Register64.rsp, start.local) {
+        instructions.add(insn = new AddStatic64Insn(Register64.rsp, start.node.local) {
             @Override
             protected boolean small() {
                 return false;
@@ -19,7 +19,7 @@ public class MethodEndInsn extends MultiInsn {
 
     @Override
     public void write(int before, ASMOutputStream out) throws IOException {
-        insn.value = start.local;
+        insn.value = start.node.local;
         super.write(before, out);
     }
 }
