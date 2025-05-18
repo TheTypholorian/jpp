@@ -2,35 +2,38 @@ package net.typho.jpp.testing;
 
 public class Testing {
     public static native void main() {
-        loadstat rsi "This is a fairly long string that I am writing to attempt to overflow the single byte jump instruction and test if strings longer than 256 bytes work fine with loadstat instruction for native methods\n"
+        loadstat rsi "Hello World!\n"
 
-        68 c8 00 00 00 // push 200
+        68 0D 00 00 00 // push 13
         56 // push rsi
         invoke print
 
-        68 80 00 00 00 // push 128
-        68 80 00 00 00 // push 128
-
+        48 B8 80 00 00 00 00 00 00 10 // mov rax, 0x1000_0000_0000_0080
+        50 // push rax
+        50 // push rax (rax * 2)
         invoke add2
 
-        89 C7 // mov edi, rax
-
-        //bf 0f 00 00 00 // mov edi, 69
-        b8 3c 00 00 00 // mov eax, 60 (exit)
-        0f 05 // syscall
+        50 // push rax
+        invoke exit
     }
 
-    public static native void add2(int a, int b) alloc 16 {
-        48 8b 45 10 // mov rax, [rbp+16]
-        48 8b 55 18 // mov rdx, [rbp+24]
-        48 01 d0 // add rax, rdx
+    public static native long add2(long a, long b) alloc 0 {
+        48 8B 45 10 // mov rax, [rbp+16]
+        48 8B 55 18 // mov rdx, [rbp+24]
+        48 01 D0 // add rax, rdx
     }
 
-    public static native void print(long ptr, int len) alloc 12 {
-        48 8b 75 10 // mov rsi, [rbp+16]
-        bf 01 00 00 00 // mov edi, 1
-        48 8b 55 18 // mov edx, [rbp+24]
-        b8 01 00 00 00 // mov eax, 1
-        0f 05 // syscall
+    public static native void print(long ptr, int len) alloc 0 {
+        48 8B 75 10 // mov rsi, [rbp+16]
+        BF 01 00 00 00 // mov edi, 1
+        48 8B 55 18 // mov edx, [rbp+24]
+        B8 01 00 00 00 // mov eax, 1
+        0F 05 // syscall
+    }
+
+    public static native void exit(int code) {
+        48 8B 7D 10 // mov rdi, [rbp+16]
+        B8 3C 00 00 00 // mov eax, 60 (exit)
+        0F 05 // syscall
     }
 }

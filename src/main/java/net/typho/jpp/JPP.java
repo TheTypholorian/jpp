@@ -50,7 +50,7 @@ public class JPP {
         //parse(new File("D:\\_code").toPath());
 
         try {
-            Path p = Path.of("classes.jpp");
+            Path p = Path.of("classes.java");
 
             System.out.println("Parsing " + p);
             Lexer lexer = new StringLexer(p);
