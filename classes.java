@@ -1,20 +1,9 @@
 package net.typho.jpp.testing;
 
 public class Testing {
-    public static native void main() {
-        loadstat rsi "Hello World!\n"
-
-        68 0D 00 00 00 // push 13
-        56 // push rsi
-        invoke print
-
-        48 B8 80 00 00 00 00 00 00 10 // mov rax, 0x1000_0000_0000_0080
-        50 // push rax
-        50 // push rax (rax * 2)
-        invoke add2
-
-        50 // push rax
-        invoke exit
+    public static void main() {
+        print("Hello World!\n", 13);
+        exit(69); //add2(0x80, 0x80)
     }
 
     public static native long add2(long a, long b) alloc 0 {
@@ -23,7 +12,7 @@ public class Testing {
         48 01 D0 // add rax, rdx
     }
 
-    public static native void print(long ptr, int len) alloc 0 {
+    public static native void print(byte* ptr, int len) alloc 0 {
         48 8B 75 10 // mov rsi, [rbp+16]
         BF 01 00 00 00 // mov edi, 1
         48 8B 55 18 // mov edx, [rbp+24]

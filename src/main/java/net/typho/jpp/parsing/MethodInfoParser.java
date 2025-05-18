@@ -1,11 +1,11 @@
 package net.typho.jpp.parsing;
 
 import net.typho.jpp.Literal;
-import net.typho.jpp.assembly.Insn;
-import net.typho.jpp.assembly.MethodInsn;
+import net.typho.jpp.assembly.*;
 import net.typho.jpp.lexical.LexicalIterator;
 import net.typho.jpp.tree.MethodNode;
 
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -28,28 +28,67 @@ public class MethodInfoParser implements Parser {
     protected void handle(String next, LexicalIterator it) {
         switch (next) {
             case "{": {
-                int brackets = 1, lines = 0;
+                List<String> stack = new LinkedList<>();
+                List<Insn> insns = new LinkedList<>();
 
-                while (brackets != 0) {
-                    next = it.next();
-
+                while (!(next = it.next()).equals("}")) {
                     switch (next) {
-                        case "{": {
-                            brackets++;
-                            break;
-                        }
-                        case "}": {
-                            brackets--;
-                            break;
-                        }
                         case ";": {
-                            lines++;
+                            parent.asm.instructions.addAll(insns);
+                            stack.clear();
+                            insns.clear();
+                            break;
+                        }
+                        case "(": {
+                            insns.add(new MethodInvokeInsn(String.join("", stack)));
+                            stack.clear();
+                            break;
+                        }
+                        case ")": {
+                            for (String s : stack) {
+                                String string = Literal.parseString(s);
+
+                                if (string != null) {
+                                    insns.addFirst(new MultiInsn() {{
+                                        instructions.add(new InlineData(string.getBytes(StandardCharsets.UTF_8)));
+                                        instructions.add(new ByteArrayInsn(0x56));
+                                    }});
+                                    continue;
+                                }
+
+                                try {
+                                    long l = Literal.parseInt(s);
+                                    byte[] result = new byte[11];
+
+                                    result[0] = 0x48;
+                                    result[1] = (byte) 0xB8;
+                                    result[2] = (byte) l;
+                                    result[3] = (byte) (l >>> 8);
+                                    result[4] = (byte) (l >>> 16);
+                                    result[5] = (byte) (l >>> 24);
+                                    result[6] = (byte) (l >>> 32);
+                                    result[7] = (byte) (l >>> 40);
+                                    result[8] = (byte) (l >>> 48);
+                                    result[9] = (byte) (l >>> 56);
+                                    result[10] = 0x50;
+
+                                    insns.addFirst(new ByteArrayInsn(result));
+                                    continue;
+                                } catch (NumberFormatException ignored) {
+                                }
+                            }
+                            break;
+                        }
+                        case ",": {
+                            break;
+                        }
+                        default: {
+                            stack.add(next);
                             break;
                         }
                     }
                 }
 
-                System.out.println("\t" + lines + " lines");
                 break;
             }
             case ";": {

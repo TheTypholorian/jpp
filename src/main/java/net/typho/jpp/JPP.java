@@ -60,7 +60,7 @@ public class JPP {
 
             byte[] b = parser.asm.write(parser.classes.getFirst()), header = Files.readAllBytes(Path.of("header.bin"));
 
-            try (FileOutputStream out = new FileOutputStream("test3.bin")) {
+            try (FileOutputStream out = new FileOutputStream("compare.bin")) {
                 writeInt(header.length + b.length, header, 0x60);
                 writeInt(header.length + b.length, header, 0x68);
 
