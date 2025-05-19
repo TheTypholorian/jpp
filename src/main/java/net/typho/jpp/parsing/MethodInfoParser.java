@@ -49,7 +49,7 @@ public class MethodInfoParser implements Parser {
                                 String string = Literal.parseString(s);
 
                                 if (string != null) {
-                                    insns.addFirst(new MultiInsn() {{
+                                    insns.add(0, new MultiInsn() {{
                                         instructions.add(new InlineData(string.getBytes(StandardCharsets.UTF_8)));
                                         instructions.add(new ByteArrayInsn(0x56));
                                     }});
@@ -72,7 +72,7 @@ public class MethodInfoParser implements Parser {
                                     result[9] = (byte) (l >>> 56);
                                     result[10] = 0x50;
 
-                                    insns.addFirst(new ByteArrayInsn(result));
+                                    insns.add(0, new ByteArrayInsn(result));
                                     continue;
                                 } catch (NumberFormatException ignored) {
                                 }

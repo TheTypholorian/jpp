@@ -1,0 +1,3 @@
+- static code
+- methods
+- field/method/class access scope

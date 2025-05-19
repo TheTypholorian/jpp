@@ -13,6 +13,7 @@ import java.util.List;
 
 public class Assembler implements Parser {
     public final List<Insn> instructions = new LinkedList<>();
+    public List<String> modifiers = List.of();
 
     public final DefaultParser parent;
 
