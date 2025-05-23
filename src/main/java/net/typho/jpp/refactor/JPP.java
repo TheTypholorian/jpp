@@ -21,10 +21,10 @@ public class JPP {
             }
         }
 
+        String out = args.computeIfAbsent("out", k -> System.getProperty("user.dir"));
+
         switch (args.getOrDefault("mode", "compile")) {
             case "compile": {
-                String out = args.computeIfAbsent("out", k -> System.getProperty("user.dir"));
-                System.out.println(out);
                 break;
             }
             case "decompile": {

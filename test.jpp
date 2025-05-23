@@ -1,10 +1,29 @@
-loadstat rsi "Hello World!\n"
+namespace test {
+    public class System {
+        public static native {
+            void println(pointer ptr, int len) {
+                48 8B 75 10 // mov rsi, [rbp+16]
+                BF 01 00 00 00 // mov edi, 1
+                48 8B 55 18 // mov edx, [rbp+24]
+                B8 01 00 00 00 // mov eax, 1
+                0F 05 // syscall
+            }
 
-bf 01 00 00 00 // mov edi, 1
-ba 0d 00 00 00 // mov edx, 13 (msg len)
-b8 01 00 00 00 // mov eax, 1 (print)
-0f 05 // syscall
+            void exit(int code) {
+                48 8B 7D 10 // mov rdi, [rbp+16]
+                B8 3C 00 00 00 // mov eax, 60 (exit)
+                0F 05 // syscall
+            }
+        }
+    }
 
-bf 0f 00 00 00 // mov edi, 15
-b8 3c 00 00 00 // mov eax, 60 (exit)
-0f 05 // syscall
+    public class Main {
+        public static {
+            void main() {
+                string print = stackalloc "Hello World!\n";
+                System.println(&print, 13);
+                System.exit(0x45);
+            }
+        }
+    }
+}
