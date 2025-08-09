@@ -1,7 +1,5 @@
 package net.typho.jpp.parsing;
 
-import java.util.function.Predicate;
-
 public interface ParsingStream {
     char readChar();
 
@@ -11,10 +9,14 @@ public interface ParsingStream {
 
     ParsingStream split();
 
+    default ParsingStream parent() {
+        return null;
+    }
+
     void merge(ParsingStream child);
 
     default void merge() {
-        merge(this);
+        parent().merge(this);
     }
 
     default String readAll() {
@@ -27,13 +29,22 @@ public interface ParsingStream {
         return builder.toString();
     }
 
-    default String readUntil(Predicate<Character> predicate) {
+    default String readToken() {
         StringBuilder builder = new StringBuilder();
 
         while (true) {
             char c = readChar();
 
-            if (predicate.test(c)) {
+            if (!isDelimiter(c)) {
+                builder.append(c);
+                break;
+            }
+        }
+
+        while (true) {
+            char c = readChar();
+
+            if (isDelimiter(c)) {
                 return builder.toString();
             }
 
@@ -41,8 +52,11 @@ public interface ParsingStream {
         }
     }
 
-    default String readToken() {
-        return readUntil(ParsingStream::shouldBreak);
+    static boolean isDelimiter(char c) {
+        return switch (c) {
+            case ' ', '\n', '\t', '\r', '(', ')', '{', '}', '[', ']' -> true;
+            default -> false;
+        };
     }
 
     default ParsingStream closure(ClosureType type) {
@@ -55,12 +69,5 @@ public interface ParsingStream {
         }
 
         return new ClosureParsingStream(this, type);
-    }
-
-    static boolean shouldBreak(char c) {
-        return switch (c) {
-            case ' ', '\n', '\t', '\r', '(', ')', '{', '}', '[', ']' -> true;
-            default -> false;
-        };
     }
 }

@@ -57,6 +57,11 @@ public class ClosureParsingStream implements ParsingStream {
     }
 
     @Override
+    public ParsingStream parent() {
+        return parent;
+    }
+
+    @Override
     public ParsingStream split() {
         return new ClosureParsingStream(parent.split(), type, i);
     }

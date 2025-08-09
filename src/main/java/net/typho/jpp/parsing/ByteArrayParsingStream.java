@@ -3,16 +3,27 @@ package net.typho.jpp.parsing;
 import net.typho.jpp.error.OutOfTextException;
 
 public class ByteArrayParsingStream implements ParsingStream {
+    public final ParsingStream parent;
     public final byte[] b;
     public int i;
 
-    public ByteArrayParsingStream(byte[] b) {
+    public ByteArrayParsingStream(ParsingStream parent, byte[] b, int i) {
+        this.parent = parent;
+        this.b = b;
+        this.i = i;
+    }
+
+    public ByteArrayParsingStream(ParsingStream parent, byte[] b) {
+        this.parent = parent;
         this.b = b;
     }
 
     public ByteArrayParsingStream(byte[] b, int i) {
-        this.b = b;
-        this.i = i;
+        this(null, b, i);
+    }
+
+    public ByteArrayParsingStream(byte[] b) {
+        this(null, b);
     }
 
     @Override
@@ -35,8 +46,13 @@ public class ByteArrayParsingStream implements ParsingStream {
     }
 
     @Override
+    public ParsingStream parent() {
+        return parent;
+    }
+
+    @Override
     public ParsingStream split() {
-        return new ByteArrayParsingStream(b, i);
+        return new ByteArrayParsingStream(this, b, i);
     }
 
     @Override

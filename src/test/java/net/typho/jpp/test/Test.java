@@ -4,6 +4,7 @@ import net.typho.jpp.BasicProject;
 import net.typho.jpp.io.ResourceFolder;
 import net.typho.jpp.io.ResourceLocation;
 import net.typho.jpp.parsing.IfStatement;
+import net.typho.jpp.parsing.Instruction;
 import net.typho.jpp.parsing.ParsingStream;
 
 import java.io.IOException;
@@ -13,8 +14,7 @@ public class Test {
         BasicProject project = new BasicProject(ResourceFolder.of("src", "test", "resources"));
 
         ParsingStream in = project.resources().openSyntax(ResourceLocation.of("Parse.java"));
-        new IfStatement().parse(in.split());
-        new IfStatement().parse(in.split());
-        //System.out.println(in.closure(ClosureTypes.PARENTHESES).readAll());
+        Instruction.parse(new IfStatement(), in);
+        Instruction.parse(new IfStatement(), in);
     }
 }
