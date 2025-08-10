@@ -1,6 +1,6 @@
 package net.typho.jpp.parsing;
 
-import net.typho.jpp.error.OutOfTextException;
+import net.typho.jpp.Project;
 
 public class ClosureParsingStream implements ParsingStream {
     public final ParsingStream parent;
@@ -28,7 +28,7 @@ public class ClosureParsingStream implements ParsingStream {
         }
 
         if (i < 0) {
-            throw new OutOfTextException("Closure " + type.open() + type.close() + " read past close");
+            throw project().outOfText("Closure " + type.open() + type.close() + " read past close");
         }
 
         return c;
@@ -54,6 +54,11 @@ public class ClosureParsingStream implements ParsingStream {
         }
 
         return true;
+    }
+
+    @Override
+    public Project project() {
+        return parent.project();
     }
 
     @Override

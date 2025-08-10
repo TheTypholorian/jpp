@@ -2,6 +2,4 @@ if (somethingHere()) {
     doSomething();
 }
 
-if (somethingElse()) {
-    doSomethingElse();
-}
+helloThere(first, second, third);

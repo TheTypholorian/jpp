@@ -3,10 +3,10 @@ package net.typho.jpp.parsing;
 public interface Instruction {
     boolean parse(ParsingStream in);
 
-    static boolean parse(Instruction insn, ParsingStream in) {
+    default boolean splitParse(ParsingStream in) {
         ParsingStream split = in.split();
 
-        if (!insn.parse(split)) {
+        if (!parse(split)) {
             return false;
         }
 

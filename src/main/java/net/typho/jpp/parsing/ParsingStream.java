@@ -1,11 +1,30 @@
 package net.typho.jpp.parsing;
 
+import net.typho.jpp.Project;
+import net.typho.jpp.error.OutOfTextException;
+
 public interface ParsingStream {
+    char[] DELIMITERS = {' ', '\n', '\t', '\r', '(', ')', '{', '}', '[', ']'};
+
     char readChar();
 
     char peekChar();
 
     boolean hasMore();
+
+    Project project();
+
+    default boolean hasMoreSignificant() {
+        ParsingStream split = split();
+
+        while (split.hasMore()) {
+            if (!isDelimiter(split.readChar(), DELIMITERS)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     ParsingStream split();
 
@@ -29,34 +48,45 @@ public interface ParsingStream {
         return builder.toString();
     }
 
-    default String readToken() {
+    default String readToken(char... delimiters) {
         StringBuilder builder = new StringBuilder();
 
-        while (true) {
-            char c = readChar();
+        try {
+            while (true) {
+                char c = readChar();
 
-            if (!isDelimiter(c)) {
-                builder.append(c);
-                break;
-            }
-        }
-
-        while (true) {
-            char c = readChar();
-
-            if (isDelimiter(c)) {
-                return builder.toString();
+                if (!isDelimiter(c, delimiters)) {
+                    builder.append(c);
+                    break;
+                }
             }
 
-            builder.append(c);
+            while (true) {
+                char c = peekChar();
+
+                if (isDelimiter(c, delimiters)) {
+                    return builder.toString();
+                }
+
+                builder.append(readChar());
+            }
+        } catch (OutOfTextException e) {
+            return builder.toString();
         }
     }
 
-    static boolean isDelimiter(char c) {
-        return switch (c) {
-            case ' ', '\n', '\t', '\r', '(', ')', '{', '}', '[', ']' -> true;
-            default -> false;
-        };
+    default String readToken() {
+        return readToken(DELIMITERS);
+    }
+
+    static boolean isDelimiter(char c, char... delimiters) {
+        for (char d : delimiters) {
+            if (c == d) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     default ParsingStream closure(ClosureType type) {
